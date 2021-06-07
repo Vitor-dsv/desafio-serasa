@@ -6,7 +6,7 @@
 - Node instalado.
 - AWS CLI instalado e configurado.
 
-### 🎲 Rodando o Back End (servidor)
+### 🎲 Rodando o Back End 
 
 ```bash
 # Clone este repositório.
