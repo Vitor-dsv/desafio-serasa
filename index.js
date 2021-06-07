@@ -8,7 +8,11 @@ const dataScore = require('./data/dataScore');
 app.use(bodyParser.json({ strict: false }));
 
 app.get('/score', (req, res) => {
-    const result = dataScore.getScores();
+    const params = {
+        TableName: 'data_score',
+    };
+
+    const result = dataScore.getScores(params);
 
     res.json(result);
 });
@@ -45,8 +49,11 @@ app.post('/score', (req, res) => {
     };
 
     const result = dataScore.insertScore(params);
+    if (result.error) {
+        res.json(result.error);
+    }
 
-    res.json(result);
+    res.json({ scoreId, age, listProperties, address, sourceOfIncome });
 });
 
 app.put('/score', (req, res) => {
@@ -62,7 +69,11 @@ app.put('/score', (req, res) => {
 
     const result = dataScore.updateScore(params);
 
-    res.json(result);
+    if (result.error) {
+        res.json(result.error);
+    }
+
+    res.json({ scoreId, age, listProperties, address, sourceOfIncome });
 });
 
 app.delete('/score/:scoreId', (req, res) => {

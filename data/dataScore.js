@@ -1,10 +1,6 @@
 const dynamodb = require('../commons/dynamodb');
 
-exports.getScores = () => {
-    const params = {
-        TableName: 'data_score',
-    };
-
+exports.getScores = (params) => {
     dynamodb.scan(params, (error, result) => {
         const { Items: score } = result;
         return JSON.parse({ score });
@@ -26,39 +22,38 @@ exports.getScore = (params) => {
                 sourceOfIncome } = result.Item;
             return JSON.parse({ scoreId, age, listProperties, address, sourceOfIncome });
         } else {
-            return JSON.parse({ error: `Os dados do Score: ${todoId} não foram enocontrados!` });
+            return JSON.parse({ error: `Os dados do Score: ${scoreId} não foram enocontrados!` });
         }
     });
 }
 
 exports.insertScore = (params) => {
     dynamodb.put(params, (error) => {
-        return JSON.parse({
-            scoreId,
-            age,
-            listProperties,
-            address,
-            sourceOfIncome
-        });
+        if (error) {
+            console.log(`Erro ao inserir o Score: `, error);
+            return JSON.parse({ error: 'Não foi possível inserir o Score' });
+        }
+
+        return JSON.parse({ success: true });
     });
 }
 
 exports.updateScore = (params) => {
     dynamodb.update(params, (error) => {
         if (error) {
-            console.log(`Error updating Todo with id ${todoId}: `, error);
-            return JSON.parse({ error: 'Could not update Todo' });
+            console.log(`Erro ao atualizar o Score com id ${scoreId}: `, error);
+            return JSON.parse({ error: 'Não foi possível atualizar o Score' });
         }
 
-        return JSON.parse({ todoId, title, done });
+        return JSON.parse({ success: true });
     });
 }
 
 exports.deleteScore = (params) => {
     dynamoDb.delete(params, (error) => {
         if (error) {
-            console.log(`Error updating Todo with id ${todoId}`, error);
-            return JSON.parse({ error: 'Could not delete Todo' });
+            console.log(`Erro ao excluir o Score com ID ${scoreId}: `, error);
+            return JSON.parse({ error: 'Não foi possível deletar este Score' });
         }
 
         return JSON.parse({ success: true });
